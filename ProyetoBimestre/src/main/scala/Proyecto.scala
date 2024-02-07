@@ -28,25 +28,12 @@ object Proyecto {
 
     reader2.close()
 
-    chartingGxMinute(contentFile2)
+    chartingGoalPerMinute(contentFile2)
     charting(contenFile)
     chartingWinnerTournament(contentFile2)
-    contentFile2.map(x => (x("matches_stage_name"), x("goals_goal_id")))
-      .distinct
-      .groupBy(x => x._1)
-      .map(x => x._1 -> x._2.length.toDouble)
 
-    contentFile2.map(x => (x("matches_tournament_id"), x("goals_goal_id")))
-      .distinct
-      .groupBy(x => x._1)
-      .map(x => x._1 -> x._2.length.toDouble)
+    charStageGoals(contentFile2)
 
-    contentFile2.map(x => (x("stadiums_city_name"), x("goals_goal_id")))
-      .distinct
-      .groupBy(x => x._1)
-      .map(x => x._1 -> x._2.length.toDouble)
-
-    chartGroupGoals(contentFile2)
     chartTotalGoalsTourMen(contentFile2)
     chartTotalGoalsTourWomen(contentFile2)
     chartStadiumGoals(contentFile2)
@@ -66,7 +53,7 @@ object Proyecto {
 
     val series = Series(indices, values)
 
-    val bar1 = saddle.barplotHorizontal(series,
+    val barWomenGoals = saddle.barplotHorizontal(series,
       xLabFontSize = Option(RelFontSize(0.6)),
       color = RedBlue(0, 5))(
       par
@@ -75,7 +62,7 @@ object Proyecto {
         .xLabelRotation(-77)
         .xNumTicks(0)
         .main("Goles Totales Por Mundial Masculino"))
-    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\TotalGoalTourWomen.png"), bar1.build, 400)
+    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\TotalGoalTourWomen.png"), barWomenGoals.build, 400)
 
   }
 
@@ -90,16 +77,16 @@ object Proyecto {
 
     val series = Series(indices, values)
 
-    val bar1 = saddle.barplotHorizontal(series,
-      xLabFontSize = Option(RelFontSize(0.5)),
-      color = RedBlue(0, 5))(
+    val barStadiumGoal = saddle.barplotHorizontal(series,
+      xLabFontSize = Option(RelFontSize(0.1)),
+      color = GrayScale(10, 200))(
       par
         .xlab("Estadios")
         .ylab("Goles")
         .xLabelRotation(-77)
         .xNumTicks(0)
         .main("Cantidad de goles por Estadio"))
-    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\StadiumGoal.png"), bar1.build, 400)
+    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\StadiumGoal.png"), barStadiumGoal.build, 400)
 
   }
 
@@ -128,7 +115,7 @@ object Proyecto {
 
   }
 
-  def chartGroupGoals(data: List[Map[String, String]]): Unit = {
+  def charStageGoals(data: List[Map[String, String]]): Unit = {
     val data4Chart = data
       .map(x => (x("matches_stage_name"), x("goals_goal_id")))
       .distinct
@@ -140,7 +127,7 @@ object Proyecto {
 
     val series = Series(indices, values)
 
-    val bar1 = saddle.barplotHorizontal(series,
+    val barStageGoal = saddle.barplotHorizontal(series,
       xLabFontSize = Option(RelFontSize(1)),
       color = RedBlue(0, 5))(
       par
@@ -149,7 +136,7 @@ object Proyecto {
         .xLabelRotation(-77)
         .xNumTicks(0)
         .main("Canidad de Goles por Fase del Mundial"))
-    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\StagesGoals.png"), bar1.build, 400)
+    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\StagesGoals.png"), barStageGoal.build, 400)
 
   }
 
@@ -165,7 +152,7 @@ object Proyecto {
 
     val series = Series(indices, values)
 
-    val bar1 = saddle.barplotHorizontal(series,
+    val barTourWin = saddle.barplotHorizontal(series,
       xLabFontSize = Option(RelFontSize(1)),
       color = RedBlue(0, 5))(
       par
@@ -174,11 +161,11 @@ object Proyecto {
         .xLabelRotation(-77)
         .xNumTicks(0)
         .main("Número de campeonatos Mundiales"))
-    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\WinnerTour.png"), bar1.build, 400)
+    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\WinnerTour.png"), barTourWin.build, 400)
   }
 
 
-  def chartingGxMinute(data: List[Map[String, String]]): Unit = {
+  def chartingGoalPerMinute(data: List[Map[String, String]]): Unit = {
     val data4Chart = data
       .filter(row => row("goals_minute_regulation") != "NA")
       .map(row => (row("goals_minute_regulation").toDouble, row("goals_goal_id")))
@@ -191,7 +178,7 @@ object Proyecto {
 
     val series = Series(indices, values)
 
-    val bar1 = saddle.barplotHorizontal(series,
+    val barGoalPerMinute = saddle.barplotHorizontal(series,
       xLabFontSize = Option(RelFontSize(0.2)),
       color = RedBlue(86, 186))(
       par
@@ -200,7 +187,7 @@ object Proyecto {
         .xLabelRotation(-77)
         .xNumTicks(0)
         .main("Goles por Minuto"))
-    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\GxP.png"), bar1.build, 400)
+    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\GxP.png"), barGoalPerMinute.build, 400)
   }
 
 

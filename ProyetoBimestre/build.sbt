@@ -12,6 +12,6 @@ lazy val root = (project in file("."))
       "io.github.pityka" %% "nspl-saddle" % "0.10.0",
       "org.tpolecat" %% "doobie-core" % "1.0.0-RC5",
       "org.tpolecat" %% "doobie-hikari" % "1.0.0-RC5"
-
     )
+
   )
