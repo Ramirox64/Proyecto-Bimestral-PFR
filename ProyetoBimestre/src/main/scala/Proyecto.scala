@@ -1,14 +1,13 @@
 import com.github.tototoshi.csv.*
-import org.nspl.*
 import org.nspl.awtrenderer.*
+import org.nspl.*
 import org.nspl.data.HistogramData
 import org.nspl.data.HistogramData.*
-import org.nspl.{data, *}
 import org.saddle.{Index, Series, Vec}
 
 import java.io.File
 
-implicit object CustomFormat extends DefaultCSVFormat{
+implicit object CustomFormat extends DefaultCSVFormat {
   override val delimiter: Char = ';'
 }
 
@@ -41,31 +40,33 @@ object Proyecto {
 
   }
 
+  //Goles totales de mujeres en mundiales
   def chartTotalGoalsTourWomen(data: List[Map[String, String]]): Unit = {
     val data4Chart = data
       .map(x => (x("matches_tournament_id"), x("goals_goal_id"), x("tournaments_tournament_name")))
       .distinct
       .filter(x => x._3.contains("FIFA Women's World Cup"))
       .groupBy(x => x._1)
-      .map(x => x._1 -> x._2.length.toDouble)
+      .map(x => x._1.split("-")(1).toDouble -> x._2.length.toDouble)
+      .toIndexedSeq
     val indices = Index(data4Chart.map(value => value._1).toArray)
     val values = Vec(data4Chart.map(value => value._2).toArray)
 
     val series = Series(indices, values)
 
-    val barWomenGoals = saddle.barplotHorizontal(series,
-      xLabFontSize = Option(RelFontSize(0.6)),
-      color = RedBlue(0, 5))(
+    val plot=xyplot(data4Chart)(
       par
         .xlab("Mundial")
         .ylab("Goles")
         .xLabelRotation(-77)
         .xNumTicks(0)
-        .main("Goles Totales Por Mundial Masculino"))
-    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\TotalGoalTourWomen.png"), barWomenGoals.build, 400)
+        .main("Cantidad de goles de Mujeres")
+    )
+    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\TotalGoalTourWomen.png"), plot.build, 400)
 
   }
 
+  //Goles Totales en cada estadio
   def chartStadiumGoals(data: List[Map[String, String]]): Unit = {
     val data4Chart = data
       .map(x => (x("stadiums_city_name"), x("goals_goal_id")))
@@ -90,11 +91,12 @@ object Proyecto {
 
   }
 
+  //goles totales de hombres en mundiales
   def chartTotalGoalsTourMen(data: List[Map[String, String]]): Unit = {
     val data4Chart = data
       .map(x => (x("matches_tournament_id"), x("goals_goal_id"), x("tournaments_tournament_name")))
       .distinct
-      .filter(x => x._3.contains("FIFA Men's World Cup") )
+      .filter(x => x._3.contains("FIFA Men's World Cup"))
       .groupBy(x => x._1)
       .map(x => x._1 -> x._2.length.toDouble)
     val indices = Index(data4Chart.map(value => value._1).toArray)
@@ -115,6 +117,7 @@ object Proyecto {
 
   }
 
+  //Goles totales de cada fase del mundial
   def charStageGoals(data: List[Map[String, String]]): Unit = {
     val data4Chart = data
       .map(x => (x("matches_stage_name"), x("goals_goal_id")))
@@ -140,6 +143,7 @@ object Proyecto {
 
   }
 
+  // Número de veces que han campeonado los países
   def chartingWinnerTournament(data: List[Map[String, String]]): Unit = {
     val data4Chart = data
       .map(x => (x("tournaments_winner"), x("tournaments_year")))
@@ -164,11 +168,11 @@ object Proyecto {
     pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\WinnerTour.png"), barTourWin.build, 400)
   }
 
-
+  //Ratio de goles por minuto
   def chartingGoalPerMinute(data: List[Map[String, String]]): Unit = {
     val data4Chart = data
-      .filter(row => row("goals_minute_regulation") != "NA")
-      .map(row => (row("goals_minute_regulation").toDouble, row("goals_goal_id")))
+      .filter(x => x("goals_minute_regulation") != "NA")
+      .map(x => (x("goals_minute_regulation").toDouble, x("goals_goal_id")))
       .map(x => x._1 -> x._2) //
       .groupBy(_._1)
       .map(x => (x._1.toString, x._2.length.toDouble))
@@ -187,7 +191,7 @@ object Proyecto {
         .xLabelRotation(-77)
         .xNumTicks(0)
         .main("Goles por Minuto"))
-    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\GxP.png"), barGoalPerMinute.build, 400)
+    pngToFile(new File("C:\\Users\\USUARIO WIN10\\Desktop\\Pintegrador\\GoalPerMinute.png"), barGoalPerMinute.build, 400)
   }
 
 
