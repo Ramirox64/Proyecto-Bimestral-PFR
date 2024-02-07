@@ -49,14 +49,11 @@ object Proyecto {
       .groupBy(x => x._1)
       .map(x => x._1.split("-")(1).toDouble -> x._2.length.toDouble)
       .toIndexedSeq
-    val indices = Index(data4Chart.map(value => value._1).toArray)
-    val values = Vec(data4Chart.map(value => value._2).toArray)
 
-    val series = Series(indices, values)
 
     val plot=xyplot(data4Chart)(
       par
-        .xlab("Mundial")
+        .withXLab("Mundial")
         .ylab("Goles")
         .xLabelRotation(-77)
         .xNumTicks(0)
